@@ -1,6 +1,6 @@
-resource "aws_instance" "instance_1" {
+resource "aws_instance" "instance-1" {
     ami             = var.ami
-    instance_type   = var.instance_type
+    instance_type   = var.instance-type
     security_groups = [aws_security_group.instances.name]
     user_data       = <<-EOF
                 #!/bin/bash
@@ -8,13 +8,13 @@ resource "aws_instance" "instance_1" {
                 python3 -m http.server 8080 &
                 EOF
     tags = {
-        Name = "${var.app_name}-${var.environment_name}-server-1"
+        Name = "${var.app-name}-${var.environment-name}-server-1"
     }
 }
 
-resource "aws_instance" "instance_2" {
+resource "aws_instance" "instance-2" {
     ami             = var.ami
-    instance_type   = var.instance_type
+    instance_type   = var.instance-type
     security_groups = [aws_security_group.instances.name]
     user_data       = <<-EOF
                 #!/bin/bash
@@ -22,6 +22,6 @@ resource "aws_instance" "instance_2" {
                 python3 -m http.server 8080 &
                 EOF
     tags = {
-        Name = "${var.app_name}-${var.environment_name}-server-2"
+        Name = "${var.app-name}-${var.environment-name}-server-2"
     }
 }
