@@ -37,6 +37,25 @@ module "ecs-cluster" {
   subnets           = [module.vpc.public-subnet-1-id, module.vpc.public-subnet-2-id]
   security-group    = module.vpc.security-group-public-id
   vpc-id            = module.vpc.vpc-id
+  container-image   = "nginx:latest"
+  container-name    = "nginx"
+  container-port    = 80
+}
+
+module "api" {
+  source                = "../modules/api-server-module"
+  region                = "us-west-2"
+  desired-task-number   = 2
+  ecs-service-name      = module.ecs-cluster.ecs-cluster-name
+  docker-image-url      = "nginx:latest"
+  memory                = 1024
+  docker-container-port = 80
+  ecs-cluster-id        = module.ecs-cluster.ecs-cluster-id
+  ecs-tg-arn            = module.ecs-cluster.ecs-tg-arn
+  subnets               = [module.vpc.public-subnet-1-id, module.vpc.public-subnet-2-id]
+  security-group        = module.vpc.security-group-public-id
+  vpc-id                = module.vpc.vpc-id
+  ecs-tg-name           = module.ecs-cluster.ecs-tg-name
 }
 
 module "s3" {

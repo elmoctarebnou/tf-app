@@ -6,19 +6,30 @@ resource "aws_ecs_cluster" "ecs-fargate-cluster" {
 }
 
 // ECS ALB
-resource "aws_lb" "ecs-alb" {
+resource "aws_alb" "ecs-alb" {
     name               = "${var.cluster-name}-alb"
     internal           = false
-    load_balancer_type = "application"
     subnets            = var.subnets
     security_groups    = [var.security-group]
 }
+
+
 // Target group
 resource "aws_alb_target_group" "ecs-tg" {
     name     = "${var.cluster-name}-tg"
     port     = 80
     protocol = "HTTP"
     vpc_id   = var.vpc-id
+    target_type = "ip"
+    health_check {
+        path                = "/"
+        protocol            = "HTTP"
+        matcher             = "200"
+        interval            = "60"
+        timeout             = "30"
+        unhealthy_threshold = "3"
+        healthy_threshold   = "3"
+    }
 
     tags = {
         Name = "${var.cluster-name}-tg"
@@ -26,8 +37,8 @@ resource "aws_alb_target_group" "ecs-tg" {
 }
 
 // Listener
-resource "aws_lb_listener" "ecs-listener" {
-    load_balancer_arn = aws_lb.ecs-alb.arn
+resource "aws_alb_listener" "ecs-alb-http-listener" {
+    load_balancer_arn = aws_alb.ecs-alb.arn
     port              = 80
     protocol          = "HTTP"
 
@@ -106,3 +117,5 @@ resource "aws_iam_role_policy_attachment" "ecs-policy-attachment" {
     role       = aws_iam_role.ecs-role.name
     policy_arn = aws_iam_policy.ecs-policy.arn
 }
+
+

@@ -30,3 +30,20 @@ variable "vpc-id" {
   description = "The VPC ID to deploy the ECS cluster"
   type        = string
 }
+
+variable "container-name" {
+  description = "The name of the container"
+  type        = string
+  default     = "api"
+}
+
+variable "container-port" {
+  description = "The port of the container"
+  type        = number
+  default     = 80
+}
+
+variable "container-image" {
+  description = "The image of the container"
+  type        = string
+}
