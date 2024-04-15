@@ -35,3 +35,4 @@ variable "private-subnet-2-cidr" {
     description = "Private subnet 2 CIDR block"
     type        = string
 }
+
